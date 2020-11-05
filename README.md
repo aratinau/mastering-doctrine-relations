@@ -1,3 +1,9 @@
+# Notes
+
+## Phptstorm
+
+`ctrl alt o` removes unused 'use' statements
+
 # Stellar Development with Symfony 4
 
 Well hi there! This repository holds the code and script
