@@ -4,6 +4,28 @@
 
 `ctrl alt o` removes unused 'use' statements
 
+## Criteria in Repository
+
+```php
+public function findAllPublishedOrderedByNewest()
+{
+    $this->createQueryBuilder('a')
+        ->addCriteria(self::createNonDeletedCriteria())
+        ->getQuery()
+        ->getResult()
+    ;
+}
+
+public static function createNonDeletedCriteria(): Criteria
+    {
+        // Ici le Criteria qui est appelé dand findAllPublishedOrderedByNewest()
+        return Criteria::create()
+            ->andWhere(Criteria::expr()->eq('isDeleted', false))
+            ->orderBy(['createdAt' => 'DESC'])
+        ;
+    }
+```
+
 # Stellar Development with Symfony 4
 
 Well hi there! This repository holds the code and script
