@@ -59,7 +59,7 @@ class Article
     private $imageFilename;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="article")
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="article", fetch="EXTRA_LAZY")
      * @ORM\OrderBy({"createdAt" = "DESC"})
      */
     private $comments;
@@ -175,6 +175,14 @@ class Article
      * @return Collection|Comment[]
      */
     public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getNonDeletedComments(): Collection
     {
         return $this->comments;
     }
