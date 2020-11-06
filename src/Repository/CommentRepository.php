@@ -19,6 +19,61 @@ class CommentRepository extends ServiceEntityRepository
         parent::__construct($registry, Comment::class);
     }
 
+    public static function createNonDeletedCriteria(): Criteria
+    {
+        return Criteria::create()
+            ->andWhere(Criteria::expr()->eq('isDeleted', false))
+            ->orderBy(['createdAt' => 'DESC'])
+            ;
+    }
+    /**
+     * @param string|null $term
+     * @return Comment[]
+     */
+    public function findAllWithSearch(?string $term)
+    {
+        $qb = $this->createQueryBuilder('c');
+
+        /*
+            How can we do this? Hmm, the QueryBuilder apparently has an orWhere() method.
+            Perfect, right? No! Surprise, I never use this method.
+            Why? Imagine a complex query with various levels of AND clauses mixed with OR clauses and parenthesis.
+
+            with $qb->andWhere
+            SELECT * FROM comment c
+                WHERE
+                    c.is_deleted = 0
+                    AND (
+                        c.author_name LIKE '%foo%'
+                        OR
+                        c.content LIKE '%foo%'
+                    )
+
+            DO NOT with $qb->orWhere - because it will return comment with is_deleted = 0
+            SELECT * FROM comment c
+                WHERE
+                    c.is_deleted = 0
+                    AND
+                    c.author_name LIKE '%foo%'
+                    OR
+                    c.content LIKE '%foo%'
+
+            With a complex query like this, you would need to be very careful to use the parenthesis in just the right places.
+            One mistake could lead to an OR causing many more results to be returned than you expect!
+         */
+        if ($term) {
+            $qb->andWhere('c.content LIKE :term OR c.authorName LIKE :term')
+                ->setParameter('term', '%'.$term.'%')
+            ;
+        }
+
+        return $qb
+            ->orderBy('c.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
 //    /**
 //     * @return Comment[] Returns an array of Comment objects
 //     */
