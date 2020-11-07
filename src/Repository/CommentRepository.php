@@ -32,7 +32,10 @@ class CommentRepository extends ServiceEntityRepository
      */
     public function findAllWithSearch(?string $term)
     {
-        $qb = $this->createQueryBuilder('c');
+        $qb = $this->createQueryBuilder('c')
+            ->innerJoin('c.article', 'a')
+            ->addSelect('a') // With this line, we're telling the QueryBuilder to select all of the comment columns and all of the article columns.
+        ;
 
         /*
             How can we do this? Hmm, the QueryBuilder apparently has an orWhere() method.
@@ -62,7 +65,7 @@ class CommentRepository extends ServiceEntityRepository
             One mistake could lead to an OR causing many more results to be returned than you expect!
          */
         if ($term) {
-            $qb->andWhere('c.content LIKE :term OR c.authorName LIKE :term')
+            $qb->andWhere('c.content LIKE :term OR c.authorName LIKE :term OR a.title LIKE :term')
                 ->setParameter('term', '%'.$term.'%')
             ;
         }
