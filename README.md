@@ -29,6 +29,10 @@ public static function createNonDeletedCriteria(): Criteria
 ## The Twig Extensions Library
 
     composer require twig/extensions
+    
+## Pagination
+
+    composer require knplabs/knp-paginator-bundle
 
 # Stellar Development with Symfony 4
 

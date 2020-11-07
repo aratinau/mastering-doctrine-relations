@@ -6,6 +6,7 @@
         "ext-iconv": "*",
         "composer/package-versions-deprecated": "^1.11",
         "knplabs/knp-markdown-bundle": "^1.7",
+        "knplabs/knp-paginator-bundle": "^5.3",
         "knplabs/knp-time-bundle": "^1.8",
         "nexylan/slack-bundle": "^2.0,<2.2.0",
         "php-http/guzzle6-adapter": "^1.1",
